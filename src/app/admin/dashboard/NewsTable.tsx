@@ -12,7 +12,7 @@ interface NewsItem {
 interface Props {
   news: NewsItem[];
   fetchNews: () => void;
-  onEditNews: (id: string) => void;
+  onEditNews: (newsItem: NewsItem) => void;
 }
 
 const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
@@ -45,7 +45,7 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
               <td className="py-2 px-4 border-b">{item.content}</td>
               <td className="py-2 px-4 border-b">
                 <button
-                  onClick={() => onEditNews(item._id)}
+                  onClick={() => onEditNews(item)}
                   className="bg-yellow-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-yellow-600 transition duration-300"
                 >
                   Edit

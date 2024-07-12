@@ -1,8 +1,16 @@
+// src/app/admin/edit-news/[id].tsx
+
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
+
+interface NewsItem {
+  _id: string;
+  title: string;
+  content: string;
+}
 
 export default function EditNews() {
   const [title, setTitle] = useState('');
@@ -10,22 +18,26 @@ export default function EditNews() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
-  const { id } = useParams(); // Use the useParams hook to get the ID from the URL
+  const { id } = router.query;
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8070/news/${id}`);
-        setTitle(response.data.title);
-        setContent(response.data.content);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      }
-    };
-    fetchNews();
+    if (id) {
+      fetchNews(typeof id === 'string' ? id : id[0]);
+    }
   }, [id]);
 
-  const handleEditNews = async (e: React.FormEvent) => {
+  const fetchNews = async (newsId: string) => {
+    try {
+      const response = await axios.get(`http://localhost:8070/news/${newsId}`);
+      setTitle(response.data.title);
+      setContent(response.data.content);
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      setError('Error fetching news. Please try again.');
+    }
+  };
+
+  const handleUpdateNews = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
@@ -34,7 +46,7 @@ export default function EditNews() {
       setSuccess('News updated successfully!');
       setTimeout(() => {
         router.push('/admin/dashboard');
-      }, 2000); // Redirect to dashboard after 2 seconds
+      }, 2000);
     } catch (error) {
       setError('Error updating news. Please try again.');
       console.error('Error updating news:', error);
@@ -44,7 +56,7 @@ export default function EditNews() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Edit News</h1>
-      <form onSubmit={handleEditNews} className="space-y-4">
+      <form onSubmit={handleUpdateNews} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700">
             Title
@@ -53,7 +65,7 @@ export default function EditNews() {
             type="text"
             id="title"
             value={title}
-            onChange={e => setTitle(e.target.value)}
+            onChange={(e) => setTitle(e.target.value)}
             className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             required
           />
@@ -65,7 +77,7 @@ export default function EditNews() {
           <textarea
             id="content"
             value={content}
-            onChange={e => setContent(e.target.value)}
+            onChange={(e) => setContent(e.target.value)}
             className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             required
           ></textarea>

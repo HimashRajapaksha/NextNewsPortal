@@ -13,6 +13,11 @@ interface NewsItem {
 
 export default function AdminDashboard() {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const router = useRouter();
 
   const fetchNews = async () => {
@@ -33,8 +38,29 @@ export default function AdminDashboard() {
     router.push('/'); // Redirect to home page after logout
   };
 
-  const handleEditNews = (id: string) => {
-    router.push(`/admin/edit-news/${id}`); // Navigate to edit news page
+  const handleEditNews = (newsItem: NewsItem) => {
+    setEditingNews(newsItem);
+    setTitle(newsItem.title);
+    setContent(newsItem.content);
+  };
+
+  const handleUpdateNews = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    if (editingNews) {
+      try {
+        await axios.put(`http://localhost:8070/news/update/${editingNews._id}`, { title, content });
+        setSuccess('News updated successfully!');
+        fetchNews();
+        setEditingNews(null);
+        setTitle('');
+        setContent('');
+      } catch (error) {
+        setError('Error updating news. Please try again.');
+        console.error('Error updating news:', error);
+      }
+    }
   };
 
   return (
@@ -56,7 +82,55 @@ export default function AdminDashboard() {
         </button>
       </div>
 
-      <NewsTable news={news} fetchNews={fetchNews} onEditNews={handleEditNews} />
+      {editingNews ? (
+        <div className="mb-8">
+          <h2 className="text-xl font-bold mb-4">Edit News</h2>
+          <form onSubmit={handleUpdateNews} className="space-y-4">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                Title
+              </label>
+              <input
+                type="text"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                Content
+              </label>
+              <textarea
+                id="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                required
+              ></textarea>
+            </div>
+            {error && <div className="text-red-500 text-sm">{error}</div>}
+            {success && <div className="text-green-500 text-sm">{success}</div>}
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditingNews(null)}
+              className="bg-gray-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-gray-600 transition duration-300"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      ) : (
+        <NewsTable news={news} fetchNews={fetchNews} onEditNews={handleEditNews} />
+      )}
     </div>
   );
 }
