@@ -1,4 +1,4 @@
-// File: E:\Derana Macro Labs\frontend\src\app\admin\create-news\page.tsx
+// File: E:\NextNewsPortal\src\app\admin\create-news\page.tsx
 import * as entry from '../../../../../src/app/admin/create-news/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
