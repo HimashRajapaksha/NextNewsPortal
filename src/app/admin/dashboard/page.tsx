@@ -20,8 +20,6 @@ export default function AdminDashboard() {
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const router = useRouter();
 
   const fetchNews = async () => {
@@ -50,21 +48,20 @@ export default function AdminDashboard() {
 
   const handleUpdateNews = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     if (editingNews) {
       try {
         await axios.put(`http://localhost:8070/news/update/${editingNews._id}`, { title, content });
-        setSuccess('News updated successfully!');
+        toast.success('News updated successfully!', {
+          position: "bottom-right"
+        });
         fetchNews();
         setEditingNews(null);
         setTitle('');
         setContent('');
-        toast.success('News updated successfully!', {
+      } catch (error) {
+        toast.error('Error updating news. Please try again.', {
           position: "bottom-right"
         });
-      } catch (error) {
-        setError('Error updating news. Please try again.');
         console.error('Error updating news:', error);
       }
     }
@@ -119,8 +116,6 @@ export default function AdminDashboard() {
                 required
               ></textarea>
             </div>
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            {success && <div className="text-green-500 text-sm">{success}</div>}
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
