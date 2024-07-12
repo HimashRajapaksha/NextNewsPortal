@@ -4,11 +4,15 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import NewsTable from './NewsTable'; // Ensure the path is correct
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import moment from 'moment';
 
 interface NewsItem {
   _id: string;
   title: string;
   content: string;
+  createdAt: string;
 }
 
 export default function AdminDashboard() {
@@ -34,8 +38,8 @@ export default function AdminDashboard() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from localStorage
-    router.push('/'); // Redirect to home page after logout
+    localStorage.removeItem('token');
+    router.push('/');
   };
 
   const handleEditNews = (newsItem: NewsItem) => {
@@ -56,6 +60,9 @@ export default function AdminDashboard() {
         setEditingNews(null);
         setTitle('');
         setContent('');
+        toast.success('News updated successfully!', {
+          position: "bottom-right"
+        });
       } catch (error) {
         setError('Error updating news. Please try again.');
         console.error('Error updating news:', error);
@@ -65,6 +72,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-4">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
       <div className="flex justify-end mb-4">

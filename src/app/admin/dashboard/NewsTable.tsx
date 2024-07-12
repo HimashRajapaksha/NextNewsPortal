@@ -2,11 +2,13 @@
 
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 
 interface NewsItem {
   _id: string;
   title: string;
   content: string;
+  createdAt: string;
 }
 
 interface Props {
@@ -35,6 +37,7 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
           <tr>
             <th className="py-2 px-4 border-b">Title</th>
             <th className="py-2 px-4 border-b">Content</th>
+            <th className="py-2 px-4 border-b">Create Date</th>
             <th className="py-2 px-4 border-b">Operations</th>
           </tr>
         </thead>
@@ -43,6 +46,7 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
             <tr key={item._id}>
               <td className="py-2 px-4 border-b">{item.title}</td>
               <td className="py-2 px-4 border-b">{item.content}</td>
+              <td className="py-2 px-4 border-b">{moment(item.createdAt).format('DD/MM/YYYY')}</td>
               <td className="py-2 px-4 border-b">
                 <button
                   onClick={() => onEditNews(item)}
