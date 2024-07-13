@@ -3,8 +3,6 @@
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 interface NewsItem {
   _id: string;
@@ -25,14 +23,8 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
     if (confirmed) {
       try {
         await axios.delete(`http://localhost:8070/news/delete/${id}`);
-        toast.success('News deleted successfully!', {
-          position: "bottom-right"
-        });
         fetchNews();
       } catch (error) {
-        toast.error('Error deleting news. Please try again.', {
-          position: "bottom-right"
-        });
         console.error('Error deleting news:', error);
       }
     }
@@ -40,7 +32,6 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
 
   return (
     <div className="overflow-x-auto">
-      <ToastContainer />
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>
