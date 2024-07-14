@@ -31,7 +31,7 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto bg-white bg-opacity-75 rounded-md shadow-md p-4">
       <table className="min-w-full bg-white border border-gray-200">
         <thead>
           <tr>

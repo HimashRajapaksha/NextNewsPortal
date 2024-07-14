@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import NewsTable from './NewsTable'; // Ensure the path is correct
+import NewsTable from './NewsTable';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
@@ -23,7 +23,6 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
-  
 
   const fetchNews = async () => {
     try {
@@ -72,74 +71,78 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="min-h-screen bg-cover bg-center bg-fixed pt-8" style={{ backgroundImage: "url('/images/newsbg.jpg')" }}>
       <ToastContainer />
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <div className="container mx-auto p-4 bg-white bg-opacity-75 rounded-md shadow-md">
+        <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
-        >
-          Logout
-        </button>
-        <button
-          onClick={() => router.push('/admin/create-news')}
-          className="bg-blue-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-blue-600 transition duration-300"
-        >
-          Create News
-        </button>
-      </div>
-
-      {editingNews ? (
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Edit News</h2>
-          <form onSubmit={handleUpdateNews} className="space-y-4">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                Title
-              </label>
-              <input
-                type="text"
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                Content
-              </label>
-              <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                required
-              ></textarea>
-            </div>
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            {success && <div className="text-green-500 text-sm">{success}</div>}
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
-            >
-              Update
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditingNews(null)}
-              className="bg-gray-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-gray-600 transition duration-300"
-            >
-              Cancel
-            </button>
-          </form>
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={handleLogout}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300"
+          >
+            Logout
+          </button>
+          <button
+            onClick={() => router.push('/admin/create-news')}
+            className="bg-blue-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-blue-600 transition duration-300"
+          >
+            Create News
+          </button>
         </div>
-      ) : (
-        <NewsTable news={news} fetchNews={fetchNews} onEditNews={handleEditNews} />
-      )}
+
+        {editingNews ? (
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-4">Edit News</h2>
+            <form onSubmit={handleUpdateNews} className="space-y-4">
+              <div>
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                  Content
+                </label>
+                <textarea
+                  id="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                  required
+                ></textarea>
+              </div>
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              {success && <div className="text-green-500 text-sm">{success}</div>}
+              <div className="flex justify-between">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setEditingNews(null)}
+                  className="bg-gray-500 text-white px-4 py-2 ml-4 rounded-md hover:bg-gray-600 transition duration-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <NewsTable news={news} fetchNews={fetchNews} onEditNews={handleEditNews} />
+        )}
+      </div>
     </div>
   );
 }
