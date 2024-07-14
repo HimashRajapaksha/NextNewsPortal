@@ -3,26 +3,55 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { Cloudinary } from 'cloudinary-core';
+
+const cloudinary = new Cloudinary({ cloud_name: 'dz1scy2s3', secure: true });
 
 export default function CreateNews() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
 
   const handleCreateNews = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     try {
-      await axios.post('http://localhost:8070/news/add', { title, content });
+      let imageUrl = '';
+
+      if (image) {
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', 'your-upload-preset');
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/dz1scy2s3/image/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+        const data = await response.json();
+        imageUrl = data.secure_url;
+      }
+
+      await axios.post('http://localhost:8070/news/add', { title, content, imageUrl });
       setSuccess('News created successfully!');
       setTitle('');
       setContent('');
+      setImage(null);
       setTimeout(() => {
         router.push('/admin/dashboard');
-      }, 2000); // Redirect to dashboard after 2 seconds
+      }, 500); // Redirect to dashboard after 0.5 seconds
     } catch (error) {
       setError('Error creating news. Please try again.');
       console.error('Error creating news:', error);
@@ -57,6 +86,17 @@ export default function CreateNews() {
             className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             required
           ></textarea>
+        </div>
+        <div>
+          <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+            Image
+          </label>
+          <input
+            type="file"
+            id="image"
+            onChange={handleImageChange}
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+          />
         </div>
         {error && <div className="text-red-500 text-sm">{error}</div>}
         {success && <div className="text-green-500 text-sm">{success}</div>}

@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+  
 
   const fetchNews = async () => {
     try {
