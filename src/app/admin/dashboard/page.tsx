@@ -12,6 +12,7 @@ interface NewsItem {
   _id: string;
   title: string;
   content: string;
+  imageUrl: string; // Added imageUrl field for editing
   createdAt: string;
 }
 
@@ -20,9 +21,14 @@ export default function AdminDashboard() {
   const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [editingImage, setEditingImage] = useState<File | null>(null); // State for editing image
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
 
   const fetchNews = async () => {
     try {
@@ -32,10 +38,6 @@ export default function AdminDashboard() {
       console.error('Error fetching news:', error);
     }
   };
-
-  useEffect(() => {
-    fetchNews();
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -48,18 +50,48 @@ export default function AdminDashboard() {
     setContent(newsItem.content);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setEditingImage(e.target.files[0]);
+    }
+  };
+
   const handleUpdateNews = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
     if (editingNews) {
       try {
-        await axios.put(`http://localhost:8070/news/update/${editingNews._id}`, { title, content });
+        let updatedImageUrl = editingNews.imageUrl;
+
+        // Check if there's a new image to upload
+        if (editingImage) {
+          const formData = new FormData();
+          formData.append('file', editingImage);
+          formData.append('upload_preset', 'ik0twiux'); // Ensure this is the correct preset
+
+          const response = await fetch(
+            `https://api.cloudinary.com/v1_1/dz1scy2s3/image/upload`,
+            {
+              method: 'POST',
+              body: formData,
+            }
+          );
+          const data = await response.json();
+          if (data.error) {
+            throw new Error(data.error.message);
+          }
+          updatedImageUrl = data.secure_url;
+        }
+
+        // Update news with new or existing image URL
+        await axios.put(`http://localhost:8070/news/update/${editingNews._id}`, { title, content, imageUrl: updatedImageUrl });
         setSuccess('News updated successfully!');
         fetchNews();
         setEditingNews(null);
         setTitle('');
         setContent('');
+        setEditingImage(null);
         toast.success('News updated successfully!', {
           position: "bottom-right"
         });
@@ -116,9 +148,21 @@ export default function AdminDashboard() {
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
+                  rows={5}
                   className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                   required
                 ></textarea>
+              </div>
+              <div>
+                <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                  Image
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  onChange={handleImageChange}
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                />
               </div>
               {error && <div className="text-red-500 text-sm">{error}</div>}
               {success && <div className="text-green-500 text-sm">{success}</div>}

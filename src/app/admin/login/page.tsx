@@ -24,9 +24,10 @@ export default function AdminLogin() {
       setError('Invalid username or password');
     }
   };
-
+ 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-white">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-white"
+    style={{ backgroundImage: `url('/images/adminloginbg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="max-w-md w-full p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-3xl font-bold text-center mb-6">Admin Login</h1>
         <form onSubmit={handleLogin} className="space-y-4">

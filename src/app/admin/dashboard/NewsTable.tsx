@@ -9,6 +9,7 @@ interface NewsItem {
   title: string;
   content: string;
   createdAt: string;
+  imageUrl: string; // Ensure imageUrl is included in the NewsItem interface
 }
 
 interface Props {

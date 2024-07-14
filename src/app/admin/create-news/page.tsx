@@ -31,7 +31,7 @@ export default function CreateNews() {
       if (image) {
         const formData = new FormData();
         formData.append('file', image);
-        formData.append('upload_preset', 'mnrzxgb4');
+        formData.append('upload_preset', 'ik0twiux'); // Ensure this is the correct preset
 
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/dz1scy2s3/image/upload`,
@@ -41,6 +41,9 @@ export default function CreateNews() {
           }
         );
         const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
         imageUrl = data.secure_url;
       }
 
