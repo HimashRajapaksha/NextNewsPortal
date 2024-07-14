@@ -94,9 +94,9 @@ export default function Home() {
 
       {/* Modal for displaying full news content */}
       {selectedNews && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-900 bg-opacity-50">
-          <div className="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg relative top-4 md:top-10 lg:top-16">
-            <button onClick={closeNews} className="absolute top-4 right-4 text-2xl font-bold z-10">X</button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-900 bg-opacity-60">
+          <div className="w-full max-w-2xl bg-white p-7 rounded-lg shadow-lg relative top-4 md:top-16 lg:top-16">
+            <button onClick={closeNews} className="absolute top-8 right-4 text-2xl font-bold z-10">X</button>
             {selectedNews.imageUrl && (
               <Image
                 src={selectedNews.imageUrl}
