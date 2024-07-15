@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { Cloudinary } from 'cloudinary-core';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const cloudinary = new Cloudinary({ cloud_name: 'dz1scy2s3', secure: true });
 
@@ -52,9 +54,12 @@ export default function CreateNews() {
       setTitle('');
       setContent('');
       setImage(null);
+      toast.success('News created successfully!', {
+        position: "bottom-right"
+      });
       setTimeout(() => {
         router.push('/admin/dashboard');
-      }, 500); // Redirect to dashboard after 0.5 seconds
+      }, 1500); // Redirect to dashboard after 1.5 seconds
     } catch (error) {
       setError('Error creating news. Please try again.');
       console.error('Error creating news:', error);
@@ -67,6 +72,7 @@ export default function CreateNews() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4" style={{ backgroundImage: `url('/images/createbg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <ToastContainer />
       <div className="container max-w-xl bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold mb-6 text-center">Create News</h1>
         <form onSubmit={handleCreateNews} className="space-y-6">

@@ -60,6 +60,7 @@ export default function Home() {
   };
 
   return (
+    
     <main className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-r from-gray-100 to-white p-8"
       style={{ backgroundImage: `url('/images/createbg.jpg')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
 

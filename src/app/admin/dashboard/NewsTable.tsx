@@ -45,8 +45,8 @@ const NewsTable: React.FC<Props> = ({ news, fetchNews, onEditNews }) => {
         <tbody>
           {news.map(item => (
             <tr key={item._id}>
-              <td className="py-2 px-4 border-b">{item.title}</td>
-              <td className="py-2 px-4 border-b">{item.content}</td>
+              <td className="py-2 px-4 border-b" style={{ maxWidth: '300px' }}>{item.title}</td>
+              <td className="py-2 px-4 border-b truncate"  style={{ maxWidth: '300px' }}>{item.content}</td>
               <td className="py-2 px-4 border-b">{moment(item.createdAt).format('DD/MM/YYYY')}</td>
               <td className="py-2 px-4 border-b">
                 <button
