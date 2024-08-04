@@ -77,7 +77,7 @@ export default function Home() {
       {/* Logo and title */}
       <div className="relative z-0 flex flex-col items-center mb-16">
         <Image src="/images/logo.png" alt="Logo" width={150} height={150} />
-        <h1 className="text-4xl font-bold mt-4">Welcome to Macro News Portal</h1>
+        <h1 className="text-4xl font-bold mt-4">Macro News Portal</h1>
       </div>
 
       {/* Search input */}
