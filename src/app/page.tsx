@@ -80,7 +80,10 @@ export default function Home() {
         <h1 className="text-4xl font-bold mt-4">Macro News Portal</h1>
       </div>
 
-      {/* Search input */}
+      
+      
+
+      {/* search */}
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex mb-8">
         <div className="flex w-full justify-center mb-8 lg:mb-0">
           <input
